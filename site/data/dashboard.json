@@ -1,0 +1,496 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-29",
+  "product": "Unleaded",
+  "kicker": "Transport costs rose 8.7% in the year to September 2026. Automotive fuel rose 23.6%.",
+  "headline": "Tuesday is the day to fill in Perth.",
+  "dek": "The weekly spike is worth $7.44 on a 55 litre tank. Country pumps average 22 cents a litre more than the city. The higher prices are coming through wholesale. The gap over the terminal price is close to the past year.",
+  "cards": [
+    {
+      "id": "cheapest-day",
+      "eyebrow": "Drivers",
+      "title": "Cheapest day",
+      "value": "Tuesday",
+      "detail": "Perth unleaded, last 16 weeks. Wednesday is the dearest. The price for Saturday 31 October is posted at $2.28.",
+      "status": "high",
+      "status_label": "High",
+      "action": "Fill on Tuesday. Avoid Wednesday, when the Perth price jumps."
+    },
+    {
+      "id": "timing-save",
+      "eyebrow": "Drivers",
+      "title": "What timing saves",
+      "value": "$7.44",
+      "detail": "On a 55 litre tank, Tuesday versus Wednesday.",
+      "status": "elevated",
+      "status_label": "Elevated",
+      "action": "Waiting for Tuesday instead of Wednesday saves $7.44 a fill."
+    },
+    {
+      "id": "margin",
+      "eyebrow": "Policy",
+      "title": "Pump price above wholesale",
+      "value": "8.8c",
+      "detail": "Perth unleaded minus the terminal price, last 7 days.",
+      "status": "calm",
+      "status_label": "Calm",
+      "action": "8.8c above wholesale, close to the past year. Rises and falls both reach the pump within a week."
+    },
+    {
+      "id": "regional-gap",
+      "eyebrow": "Households",
+      "title": "Country premium",
+      "value": "22c",
+      "detail": "Average unleaded outside Perth, minus the Perth average.",
+      "status": "elevated",
+      "status_label": "Elevated",
+      "action": "Budget about 22 cents a litre more outside Perth. Kimberley is the dearest, near $3.03."
+    }
+  ],
+  "charts": {
+    "week": {
+      "title": "The Perth week",
+      "lead": "Average Perth price by weekday. Tuesday is cheapest at $2.04; Wednesday peaks at $2.18.",
+      "points": [
+        {
+          "day": "Monday",
+          "label": "Mon",
+          "price_aud": 2.07,
+          "cents": 207.2,
+          "role": "mid"
+        },
+        {
+          "day": "Tuesday",
+          "label": "Tue",
+          "price_aud": 2.04,
+          "cents": 204.1,
+          "role": "cheap"
+        },
+        {
+          "day": "Wednesday",
+          "label": "Wed",
+          "price_aud": 2.18,
+          "cents": 217.6,
+          "role": "peak"
+        },
+        {
+          "day": "Thursday",
+          "label": "Thu",
+          "price_aud": 2.15,
+          "cents": 215.4,
+          "role": "mid"
+        },
+        {
+          "day": "Friday",
+          "label": "Fri",
+          "price_aud": 2.09,
+          "cents": 209.2,
+          "role": "mid"
+        },
+        {
+          "day": "Saturday",
+          "label": "Sat",
+          "price_aud": 2.08,
+          "cents": 207.8,
+          "role": "mid"
+        },
+        {
+          "day": "Sunday",
+          "label": "Sun",
+          "price_aud": 2.08,
+          "cents": 207.6,
+          "role": "mid"
+        }
+      ]
+    },
+    "wholesale": {
+      "title": "Pump price and wholesale",
+      "lead": "Weekly average pump price and the Perth terminal price, so the mid-week spike is smoothed out. Perth unleaded is up 37% on a year earlier. Brent crude is $123 a barrel, up 88% on a year ago. Over a week, about 89% of a wholesale rise and 91% of a fall show up in the pump price.",
+      "points": [
+        {
+          "week": "2025-09-29",
+          "pump_aud": 1.76,
+          "wholesale_aud": 1.63
+        },
+        {
+          "week": "2025-10-06",
+          "pump_aud": 1.72,
+          "wholesale_aud": 1.61
+        },
+        {
+          "week": "2025-10-13",
+          "pump_aud": 1.71,
+          "wholesale_aud": 1.61
+        },
+        {
+          "week": "2025-10-20",
+          "pump_aud": 1.68,
+          "wholesale_aud": 1.62
+        },
+        {
+          "week": "2025-10-27",
+          "pump_aud": 1.73,
+          "wholesale_aud": 1.64
+        },
+        {
+          "week": "2025-11-03",
+          "pump_aud": 1.75,
+          "wholesale_aud": 1.65
+        },
+        {
+          "week": "2025-11-10",
+          "pump_aud": 1.75,
+          "wholesale_aud": 1.65
+        },
+        {
+          "week": "2025-11-17",
+          "pump_aud": 1.76,
+          "wholesale_aud": 1.66
+        },
+        {
+          "week": "2025-11-24",
+          "pump_aud": 1.77,
+          "wholesale_aud": 1.64
+        },
+        {
+          "week": "2025-12-01",
+          "pump_aud": 1.76,
+          "wholesale_aud": 1.65
+        },
+        {
+          "week": "2025-12-08",
+          "pump_aud": 1.76,
+          "wholesale_aud": 1.63
+        },
+        {
+          "week": "2025-12-15",
+          "pump_aud": 1.74,
+          "wholesale_aud": 1.6
+        },
+        {
+          "week": "2025-12-22",
+          "pump_aud": 1.72,
+          "wholesale_aud": 1.57
+        },
+        {
+          "week": "2025-12-29",
+          "pump_aud": 1.71,
+          "wholesale_aud": 1.55
+        },
+        {
+          "week": "2026-01-05",
+          "pump_aud": 1.69,
+          "wholesale_aud": 1.54
+        },
+        {
+          "week": "2026-01-12",
+          "pump_aud": 1.68,
+          "wholesale_aud": 1.54
+        },
+        {
+          "week": "2026-01-19",
+          "pump_aud": 1.67,
+          "wholesale_aud": 1.54
+        },
+        {
+          "week": "2026-01-26",
+          "pump_aud": 1.66,
+          "wholesale_aud": 1.53
+        },
+        {
+          "week": "2026-02-02",
+          "pump_aud": 1.65,
+          "wholesale_aud": 1.53
+        },
+        {
+          "week": "2026-02-09",
+          "pump_aud": 1.64,
+          "wholesale_aud": 1.54
+        },
+        {
+          "week": "2026-02-16",
+          "pump_aud": 1.64,
+          "wholesale_aud": 1.53
+        },
+        {
+          "week": "2026-02-23",
+          "pump_aud": 1.65,
+          "wholesale_aud": 1.56
+        },
+        {
+          "week": "2026-03-02",
+          "pump_aud": 1.81,
+          "wholesale_aud": 1.66
+        },
+        {
+          "week": "2026-03-09",
+          "pump_aud": 2.17,
+          "wholesale_aud": 2.02
+        },
+        {
+          "week": "2026-03-16",
+          "pump_aud": 2.39,
+          "wholesale_aud": 2.34
+        },
+        {
+          "week": "2026-03-23",
+          "pump_aud": 2.54,
+          "wholesale_aud": 2.45
+        },
+        {
+          "week": "2026-03-30",
+          "pump_aud": 2.36,
+          "wholesale_aud": 2.15
+        },
+        {
+          "week": "2026-04-06",
+          "pump_aud": 2.21,
+          "wholesale_aud": 2.04
+        },
+        {
+          "week": "2026-04-13",
+          "pump_aud": 2.05,
+          "wholesale_aud": 1.92
+        },
+        {
+          "week": "2026-04-20",
+          "pump_aud": 1.87,
+          "wholesale_aud": 1.8
+        },
+        {
+          "week": "2026-04-27",
+          "pump_aud": 1.8,
+          "wholesale_aud": 1.79
+        },
+        {
+          "week": "2026-05-04",
+          "pump_aud": 1.8,
+          "wholesale_aud": 1.79
+        },
+        {
+          "week": "2026-05-11",
+          "pump_aud": 1.78,
+          "wholesale_aud": 1.73
+        },
+        {
+          "week": "2026-05-18",
+          "pump_aud": 1.81,
+          "wholesale_aud": 1.78
+        },
+        {
+          "week": "2026-05-25",
+          "pump_aud": 1.78,
+          "wholesale_aud": 1.72
+        },
+        {
+          "week": "2026-06-01",
+          "pump_aud": 1.68,
+          "wholesale_aud": 1.61
+        },
+        {
+          "week": "2026-06-08",
+          "pump_aud": 1.65,
+          "wholesale_aud": 1.6
+        },
+        {
+          "week": "2026-06-15",
+          "pump_aud": 1.62,
+          "wholesale_aud": 1.57
+        },
+        {
+          "week": "2026-06-22",
+          "pump_aud": 1.55,
+          "wholesale_aud": 1.49
+        },
+        {
+          "week": "2026-06-29",
+          "pump_aud": 1.61,
+          "wholesale_aud": 1.59
+        },
+        {
+          "week": "2026-07-06",
+          "pump_aud": 1.67,
+          "wholesale_aud": 1.62
+        },
+        {
+          "week": "2026-07-13",
+          "pump_aud": 1.71,
+          "wholesale_aud": 1.65
+        },
+        {
+          "week": "2026-07-20",
+          "pump_aud": 1.8,
+          "wholesale_aud": 1.76
+        },
+        {
+          "week": "2026-07-27",
+          "pump_aud": 1.91,
+          "wholesale_aud": 1.84
+        },
+        {
+          "week": "2026-08-03",
+          "pump_aud": 2.02,
+          "wholesale_aud": 1.97
+        },
+        {
+          "week": "2026-08-10",
+          "pump_aud": 1.97,
+          "wholesale_aud": 1.92
+        },
+        {
+          "week": "2026-08-17",
+          "pump_aud": 2.0,
+          "wholesale_aud": 1.96
+        },
+        {
+          "week": "2026-08-24",
+          "pump_aud": 2.03,
+          "wholesale_aud": 1.96
+        },
+        {
+          "week": "2026-08-31",
+          "pump_aud": 2.04,
+          "wholesale_aud": 1.98
+        },
+        {
+          "week": "2026-09-07",
+          "pump_aud": 2.1,
+          "wholesale_aud": 2.08
+        },
+        {
+          "week": "2026-09-14",
+          "pump_aud": 2.25,
+          "wholesale_aud": 2.21
+        },
+        {
+          "week": "2026-09-21",
+          "pump_aud": 2.33,
+          "wholesale_aud": 2.29
+        },
+        {
+          "week": "2026-09-28",
+          "pump_aud": 2.33,
+          "wholesale_aud": 2.3
+        },
+        {
+          "week": "2026-10-05",
+          "pump_aud": 2.38,
+          "wholesale_aud": 2.37
+        },
+        {
+          "week": "2026-10-12",
+          "pump_aud": 2.38,
+          "wholesale_aud": 2.34
+        },
+        {
+          "week": "2026-10-19",
+          "pump_aud": 2.3,
+          "wholesale_aud": 2.22
+        },
+        {
+          "week": "2026-10-26",
+          "pump_aud": 2.28,
+          "wholesale_aud": 2.2
+        }
+      ]
+    },
+    "regions": {
+      "title": "City and country",
+      "lead": "Average advertised unleaded, last 28 days. Each station counts equally.",
+      "points": [
+        {
+          "region": "Kimberley",
+          "price_aud": 3.03,
+          "kind": "regional"
+        },
+        {
+          "region": "Goldfields-Esperance",
+          "price_aud": 2.79,
+          "kind": "regional"
+        },
+        {
+          "region": "Pilbara",
+          "price_aud": 2.75,
+          "kind": "regional"
+        },
+        {
+          "region": "Gascoyne",
+          "price_aud": 2.66,
+          "kind": "regional"
+        },
+        {
+          "region": "Wheatbelt",
+          "price_aud": 2.46,
+          "kind": "regional"
+        },
+        {
+          "region": "Great Southern",
+          "price_aud": 2.46,
+          "kind": "regional"
+        },
+        {
+          "region": "Mid-West",
+          "price_aud": 2.45,
+          "kind": "regional"
+        },
+        {
+          "region": "South-West",
+          "price_aud": 2.4,
+          "kind": "regional"
+        },
+        {
+          "region": "Peel",
+          "price_aud": 2.39,
+          "kind": "regional"
+        },
+        {
+          "region": "Metro",
+          "price_aud": 2.34,
+          "kind": "metro"
+        }
+      ]
+    }
+  },
+  "footer": {
+    "as_of": "2026-10-29",
+    "attribution": "Pump and terminal prices from FuelWatch, Government of Western Australia, licensed CC BY 4.0. Brent crude is FRED series DCOILBRENTEU. The 8.7% transport figure is the Australian Bureau of Statistics consumer price index for September 2026. Figures are unleaded. Each station is counted equally.",
+    "methods_url": "https://github.com/LuciferDataEngineer/fuel-shock-radar",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "audit": {
+    "cycle_window": [
+      "2026-07-10",
+      "2026-10-29"
+    ],
+    "spread_cpl": 13.5,
+    "savings_aud": 7.44,
+    "margin_current_cpl": 8.8,
+    "margin_median_cpl": 7.6,
+    "pass_through": {
+      "judgement": "symmetric",
+      "up_ratio": 0.886,
+      "down_ratio": 0.915,
+      "up_weeks": 27,
+      "down_weeks": 23
+    },
+    "regional_gap_cpl": 21.5,
+    "brent_usd": 123.1,
+    "brent_change_pct": 87.9,
+    "scd2": {
+      "stations": 1044,
+      "versions": 1109,
+      "closed_versions": 65
+    },
+    "rows": {
+      "retail": 722413,
+      "wholesale": 22420,
+      "brent": 9117,
+      "daily_feed": 949
+    },
+    "tank_savings_display": "$7.44",
+    "quality": {
+      "success": true
+    },
+    "built_at_note": "Numbers come only from the curated extract named in manifest."
+  }
+}

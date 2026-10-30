@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fuel Shock Radar — Western Australia</title>
+  <meta name="description" content="When to fill in Perth, how pump prices compare with wholesale, and what country towns pay extra.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,650&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#content">Skip to the figures</a>
+  <header class="mast">
+    <div class="wrap mast-row">
+      <p class="mark">Fuel Shock Radar</p>
+      <p class="where">Western Australia</p>
+    </div>
+  </header>
+  <main id="content" class="wrap">
+    <p class="kicker" id="kicker">Loading the latest figures…</p>
+    <h1 id="headline"></h1>
+    <p class="dek" id="dek"></p>
+    <p class="legend">Colour shows how much each figure should change what you do: calm, elevated, or high.</p>
+    <section class="cards" id="cards" aria-label="Key figures"></section>
+    <section class="charts" aria-label="Charts">
+      <article class="panel">
+        <h2 id="week-title">The Perth week</h2>
+        <p class="lead" id="week-lead"></p>
+        <div id="chart-week"></div>
+      </article>
+      <article class="panel">
+        <h2 id="wholesale-title">Pump price and wholesale</h2>
+        <p class="lead" id="wholesale-lead"></p>
+        <div id="chart-wholesale"></div>
+      </article>
+      <article class="panel">
+        <h2 id="regions-title">City and country</h2>
+        <p class="lead" id="regions-lead"></p>
+        <div id="chart-regions"></div>
+      </article>
+    </section>
+  </main>
+  <footer class="wrap foot">
+    <p id="as-of"></p>
+    <p id="attribution"></p>
+    <p><a id="methods" href="https://github.com/LuciferDataEngineer/fuel-shock-radar">How these numbers were calculated</a></p>
+  </footer>
+  <noscript>This page needs JavaScript to draw the figures from the published data file.</noscript>
+  <script src="app.js"></script>
+</body>
+</html>

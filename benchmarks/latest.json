@@ -1,0 +1,11 @@
+{
+  "rows": 722413,
+  "repeats": 7,
+  "method": "median milliseconds after one warmup",
+  "duckdb_weekday_from_parquet_ms": 3.54,
+  "duckdb_daily_metro_from_parquet_ms": 3.32,
+  "pandas_weekday_in_memory_ms": 7.8,
+  "pandas_daily_metro_in_memory_ms": 1.54,
+  "pandas_load_via_duckdb_ms": 98.3,
+  "note": "DuckDB times include reading the parquet extract. Pandas times are the aggregation only, after the extract was loaded once. The load time is listed separately."
+}

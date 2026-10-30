@@ -1,0 +1,10 @@
+[project]
+name = "fuel-shock-radar"
+version = "1.0.0"
+description = "Western Australia fuel price shock: cycle, wholesale gap, and the country premium."
+requires-python = ">=3.11"
+readme = "README.md"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
