@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fuel-shock-radar"
+version = "1.0.0"
+description = "A reproducible Western Australian fuel-price warehouse with matched-site analytics"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = ["duckdb==2.0.0"]
+
+[project.scripts]
+fuel-radar = "fuel_radar.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

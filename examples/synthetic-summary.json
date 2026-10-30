@@ -1,0 +1,37 @@
+{
+  "as_of": "2026-10-30",
+  "caveats": [
+    "Large moves are descriptive absolute changes of at least 10 cents/litre, not evidence of a causal market shock.",
+    "Matched changes compare the same derived reporting identity and product on exact consecutive dates.",
+    "Trading-name changes create new identities; counts are reporting identities, not verified physical station counts.",
+    "All calendar days must be present, but complete coverage of every station cannot be independently proven."
+  ],
+  "consecutive_site_pairs": 62,
+  "first_date": "2026-08-01",
+  "large_move_pairs": 3,
+  "large_move_threshold_cpl": 10.0,
+  "last_date": "2026-09-30",
+  "loaded_months": 2,
+  "loaded_rows": 67,
+  "months": [
+    {
+      "month": "2026-08",
+      "revision": 1,
+      "row_count": 31,
+      "sha256": "01ee4136ce8034acdc6f652888f1394117f2b35ed6693cd0b2161b84f8fd9aa1"
+    },
+    {
+      "month": "2026-09",
+      "revision": 1,
+      "row_count": 36,
+      "sha256": "7a2a15f367ca2959ed4c7ff17f0a7b5fa140825d26b0bf25f5745d7430293f94"
+    }
+  ],
+  "observations": 67,
+  "products": 1,
+  "reported_outlets": 4,
+  "run_id": "7aa207093e0a407fbfd634e88d1fa557",
+  "skipped_months": 0,
+  "status": "success",
+  "units": "Australian cents per litre"
+}
