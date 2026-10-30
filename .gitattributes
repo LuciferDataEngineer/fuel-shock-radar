@@ -1,0 +1,2 @@
+# Preserve exact synthetic source bytes for reproducible checksum examples.
+tests/fixtures/*.csv -text

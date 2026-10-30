@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-30",
+  "python": "3.14.7",
+  "duckdb": "2.0.0",
+  "offline_tests_passed": 18,
+  "live_fetch_and_ingest": "passed",
+  "idempotent_live_replay": "passed",
+  "business_tables_unchanged": true,
+  "source_rows": 101303,
+  "source_days": 30,
+  "reported_outlets": 998,
+  "products": 7,
+  "parquet_roundtrips": {
+    "price_observations": {
+      "rows": 101303,
+      "mismatched_rows": 0
+    },
+    "daily_market_summary": {
+      "rows": 57542,
+      "mismatched_rows": 0
+    },
+    "matched_site_changes": {
+      "rows": 97893,
+      "mismatched_rows": 0
+    },
+    "matched_market_changes": {
+      "rows": 55610,
+      "mismatched_rows": 0
+    }
+  },
+  "sql_queries_executed": 6,
+  "wheel_install_and_offline_cli": "passed"
+}

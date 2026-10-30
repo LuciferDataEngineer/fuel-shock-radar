@@ -1,0 +1,380 @@
+[
+  {
+    "query_number": 1,
+    "row_count": 7,
+    "rows": [
+      {
+        "source_month": "2026-09",
+        "product": "98 RON",
+        "observations": 21779,
+        "reported_outlets": 729,
+        "observed_days": 30,
+        "first_date": "2026-09-01",
+        "last_date": "2026-09-30"
+      },
+      {
+        "source_month": "2026-09",
+        "product": "BRAND DIESEL",
+        "observations": 13710,
+        "reported_outlets": 459,
+        "observed_days": 30,
+        "first_date": "2026-09-01",
+        "last_date": "2026-09-30"
+      },
+      {
+        "source_month": "2026-09",
+        "product": "DIESEL",
+        "observations": 20316,
+        "reported_outlets": 680,
+        "observed_days": 30,
+        "first_date": "2026-09-01",
+        "last_date": "2026-09-30"
+      },
+      {
+        "source_month": "2026-09",
+        "product": "E85",
+        "observations": 390,
+        "reported_outlets": 13,
+        "observed_days": 30,
+        "first_date": "2026-09-01",
+        "last_date": "2026-09-30"
+      },
+      {
+        "source_month": "2026-09",
+        "product": "LPG",
+        "observations": 1130,
+        "reported_outlets": 38,
+        "observed_days": 30,
+        "first_date": "2026-09-01",
+        "last_date": "2026-09-30"
+      },
+      {
+        "source_month": "2026-09",
+        "product": "PULP",
+        "observations": 15796,
+        "reported_outlets": 530,
+        "observed_days": 30,
+        "first_date": "2026-09-01",
+        "last_date": "2026-09-30"
+      },
+      {
+        "source_month": "2026-09",
+        "product": "ULP",
+        "observations": 28182,
+        "reported_outlets": 941,
+        "observed_days": 30,
+        "first_date": "2026-09-01",
+        "last_date": "2026-09-30"
+      }
+    ]
+  },
+  {
+    "query_number": 2,
+    "row_count": 7,
+    "rows": [
+      {
+        "source_month": "2026-09",
+        "product": "98 RON",
+        "observation_median_cpl": "247.9",
+        "p25_cpl": "234.9",
+        "p75_cpl": "258.9",
+        "observations": 21779
+      },
+      {
+        "source_month": "2026-09",
+        "product": "BRAND DIESEL",
+        "observation_median_cpl": "269.3",
+        "p25_cpl": "258.9",
+        "p75_cpl": "285.9",
+        "observations": 13710
+      },
+      {
+        "source_month": "2026-09",
+        "product": "DIESEL",
+        "observation_median_cpl": "268.9",
+        "p25_cpl": "254.9",
+        "p75_cpl": "283.9",
+        "observations": 20316
+      },
+      {
+        "source_month": "2026-09",
+        "product": "E85",
+        "observation_median_cpl": "269.9",
+        "p25_cpl": "269.9",
+        "p75_cpl": "269.9",
+        "observations": 390
+      },
+      {
+        "source_month": "2026-09",
+        "product": "LPG",
+        "observation_median_cpl": "159.5",
+        "p25_cpl": "158.9",
+        "p75_cpl": "159.9",
+        "observations": 1130
+      },
+      {
+        "source_month": "2026-09",
+        "product": "PULP",
+        "observation_median_cpl": "239.5",
+        "p25_cpl": "225.4",
+        "p75_cpl": "249.9",
+        "observations": 15796
+      },
+      {
+        "source_month": "2026-09",
+        "product": "ULP",
+        "observation_median_cpl": "226.8",
+        "p25_cpl": "210.9",
+        "p75_cpl": "236.8",
+        "observations": 28182
+      }
+    ]
+  },
+  {
+    "query_number": 3,
+    "row_count": 7,
+    "rows": [
+      {
+        "product": "98 RON",
+        "consecutive_pairs": 21049,
+        "large_move_pairs": 2436,
+        "large_move_pct": 11.57,
+        "median_change_cpl": "0.0"
+      },
+      {
+        "product": "BRAND DIESEL",
+        "consecutive_pairs": 13251,
+        "large_move_pairs": 231,
+        "large_move_pct": 1.74,
+        "median_change_cpl": "0.0"
+      },
+      {
+        "product": "DIESEL",
+        "consecutive_pairs": 19628,
+        "large_move_pairs": 486,
+        "large_move_pct": 2.48,
+        "median_change_cpl": "0.0"
+      },
+      {
+        "product": "E85",
+        "consecutive_pairs": 377,
+        "large_move_pairs": 0,
+        "large_move_pct": 0.0,
+        "median_change_cpl": "0.0"
+      },
+      {
+        "product": "LPG",
+        "consecutive_pairs": 1089,
+        "large_move_pairs": 0,
+        "large_move_pct": 0.0,
+        "median_change_cpl": "0.0"
+      },
+      {
+        "product": "PULP",
+        "consecutive_pairs": 15263,
+        "large_move_pairs": 2036,
+        "large_move_pct": 13.34,
+        "median_change_cpl": "0.0"
+      },
+      {
+        "product": "ULP",
+        "consecutive_pairs": 27236,
+        "large_move_pairs": 2546,
+        "large_move_pct": 9.35,
+        "median_change_cpl": "0.0"
+      }
+    ]
+  },
+  {
+    "query_number": 4,
+    "row_count": 21,
+    "rows": [
+      {
+        "observed_date": "2026-09-01",
+        "product": "98 RON",
+        "current_observations": 727,
+        "eligible_previous_day_pairs": 0,
+        "pair_coverage_pct": 0.0
+      },
+      {
+        "observed_date": "2026-09-01",
+        "product": "BRAND DIESEL",
+        "current_observations": 458,
+        "eligible_previous_day_pairs": 0,
+        "pair_coverage_pct": 0.0
+      },
+      {
+        "observed_date": "2026-09-01",
+        "product": "DIESEL",
+        "current_observations": 677,
+        "eligible_previous_day_pairs": 0,
+        "pair_coverage_pct": 0.0
+      },
+      {
+        "observed_date": "2026-09-01",
+        "product": "E85",
+        "current_observations": 13,
+        "eligible_previous_day_pairs": 0,
+        "pair_coverage_pct": 0.0
+      },
+      {
+        "observed_date": "2026-09-01",
+        "product": "LPG",
+        "current_observations": 38,
+        "eligible_previous_day_pairs": 0,
+        "pair_coverage_pct": 0.0
+      },
+      {
+        "observed_date": "2026-09-01",
+        "product": "PULP",
+        "current_observations": 526,
+        "eligible_previous_day_pairs": 0,
+        "pair_coverage_pct": 0.0
+      },
+      {
+        "observed_date": "2026-09-01",
+        "product": "ULP",
+        "current_observations": 940,
+        "eligible_previous_day_pairs": 0,
+        "pair_coverage_pct": 0.0
+      },
+      {
+        "observed_date": "2026-09-02",
+        "product": "98 RON",
+        "current_observations": 727,
+        "eligible_previous_day_pairs": 727,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-02",
+        "product": "BRAND DIESEL",
+        "current_observations": 458,
+        "eligible_previous_day_pairs": 458,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-02",
+        "product": "DIESEL",
+        "current_observations": 678,
+        "eligible_previous_day_pairs": 677,
+        "pair_coverage_pct": 99.85
+      },
+      {
+        "observed_date": "2026-09-02",
+        "product": "E85",
+        "current_observations": 13,
+        "eligible_previous_day_pairs": 13,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-02",
+        "product": "LPG",
+        "current_observations": 37,
+        "eligible_previous_day_pairs": 37,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-02",
+        "product": "PULP",
+        "current_observations": 526,
+        "eligible_previous_day_pairs": 526,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-02",
+        "product": "ULP",
+        "current_observations": 940,
+        "eligible_previous_day_pairs": 940,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-03",
+        "product": "98 RON",
+        "current_observations": 727,
+        "eligible_previous_day_pairs": 727,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-03",
+        "product": "BRAND DIESEL",
+        "current_observations": 458,
+        "eligible_previous_day_pairs": 458,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-03",
+        "product": "DIESEL",
+        "current_observations": 678,
+        "eligible_previous_day_pairs": 678,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-03",
+        "product": "E85",
+        "current_observations": 13,
+        "eligible_previous_day_pairs": 13,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-03",
+        "product": "LPG",
+        "current_observations": 37,
+        "eligible_previous_day_pairs": 37,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-03",
+        "product": "PULP",
+        "current_observations": 526,
+        "eligible_previous_day_pairs": 526,
+        "pair_coverage_pct": 100.0
+      },
+      {
+        "observed_date": "2026-09-03",
+        "product": "ULP",
+        "current_observations": 940,
+        "eligible_previous_day_pairs": 940,
+        "pair_coverage_pct": 100.0
+      }
+    ]
+  },
+  {
+    "query_number": 5,
+    "row_count": 1,
+    "rows": [
+      {
+        "source_month": "2026-09",
+        "revision": 1,
+        "row_count": 101303,
+        "min_date": "2026-09-01",
+        "max_date": "2026-09-30",
+        "source_sha256": "957ccd0afb20552f0b6ff255c4913963e1dac89208f1792f1b13426d5b360e5b",
+        "source_url": "https://warsydprdstafuelwatch.blob.core.windows.net/historical-reports/FuelWatchRetail-09-2026.csv"
+      }
+    ]
+  },
+  {
+    "query_number": 6,
+    "row_count": 2,
+    "rows": [
+      {
+        "run_id": "d1dba379cc74407394984d02616ef361",
+        "as_of": "2026-10-30",
+        "status": "success",
+        "loaded_months": 0,
+        "skipped_months": 1,
+        "loaded_rows": 0,
+        "error": null
+      },
+      {
+        "run_id": "ed86180755dd411a96dff1241f1b9705",
+        "as_of": "2026-10-30",
+        "status": "success",
+        "loaded_months": 1,
+        "skipped_months": 0,
+        "loaded_rows": 101303,
+        "error": null
+      }
+    ]
+  }
+]

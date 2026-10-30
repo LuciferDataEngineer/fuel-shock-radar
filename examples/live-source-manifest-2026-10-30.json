@@ -1,0 +1,14 @@
+{
+  "access_date": "2026-10-30",
+  "source_records": [
+    {
+      "source_sha256": "957ccd0afb20552f0b6ff255c4913963e1dac89208f1792f1b13426d5b360e5b",
+      "source_url": "https://warsydprdstafuelwatch.blob.core.windows.net/historical-reports/FuelWatchRetail-09-2026.csv",
+      "byte_size": 10792061,
+      "retrieved_at": "2026-10-30 07:39:14.966059",
+      "month": "2026-09-01",
+      "row_count": 101303
+    }
+  ],
+  "attribution": "Government of Western Australia, FuelWatch Historic Fuel Prices, CC BY 4.0. See docs/SOURCES.md for endpoint discovery and provenance limits."
+}
