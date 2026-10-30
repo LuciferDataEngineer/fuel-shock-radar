@@ -1,18 +1,10 @@
-[build-system]
-requires = ["setuptools>=77.0.3"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "fuel-shock-radar"
 version = "1.0.0"
-description = "A reproducible Western Australian fuel-price warehouse with matched-site analytics"
-readme = "README.md"
+description = "Western Australia fuel price shock: cycle, wholesale gap, and the country premium."
 requires-python = ">=3.11"
-license = "MIT"
-dependencies = ["duckdb==2.0.0"]
+readme = "README.md"
 
-[project.scripts]
-fuel-radar = "fuel_radar.__main__:main"
-
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

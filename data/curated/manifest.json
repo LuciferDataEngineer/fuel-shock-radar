@@ -1,0 +1,12 @@
+{
+  "retail_min": "2025-10-01",
+  "retail_max": "2026-10-29",
+  "daily_feed_today": "2026-10-30",
+  "daily_feed_tomorrow": "2026-10-31",
+  "products": [
+    "ULP",
+    "Diesel",
+    "Brand Diesel"
+  ],
+  "note": "price_today_cpl on the daily feed is the FuelWatch board for daily_feed_today. price_tomorrow_cpl is the locked-in next-day price."
+}

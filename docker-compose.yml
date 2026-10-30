@@ -1,0 +1,146 @@
+# Full local stack. CI does not start this file.
+# Demo passwords are for the local containers only.
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: fuelwatch
+      POSTGRES_PASSWORD: fuelwatch
+      POSTGRES_DB: fuelwatch
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+      - -c
+      - max_wal_senders=4
+      - -c
+      - max_replication_slots=4
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fuelwatch -d fuelwatch"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redpanda:
+    image: redpandadata/redpanda:v24.3.6
+    command:
+      - redpanda
+      - start
+      - --smp
+      - "1"
+      - --memory
+      - 512M
+      - --overprovisioned
+      - --kafka-addr
+      - internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr
+      - internal://redpanda:9092,external://localhost:19092
+      - --pandaproxy-addr
+      - internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --advertise-pandaproxy-addr
+      - internal://redpanda:8082,external://localhost:18082
+      - --schema-registry-addr
+      - internal://0.0.0.0:8081,external://0.0.0.0:18081
+      - --rpc-addr
+      - redpanda:33145
+      - --advertise-rpc-addr
+      - redpanda:33145
+      - --mode
+      - dev-container
+    ports:
+      - "19092:19092"
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -q 'Healthy'"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+
+  connect:
+    image: debezium/connect:2.7.3.Final
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redpanda:
+        condition: service_started
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: redpanda:9092
+      GROUP_ID: fuel-shock
+      CONFIG_STORAGE_TOPIC: fuel_shock_connect_configs
+      OFFSET_STORAGE_TOPIC: fuel_shock_connect_offsets
+      STATUS_STORAGE_TOPIC: fuel_shock_connect_status
+      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+
+  marquez:
+    image: marquezproject/marquez:0.51.1
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    environment:
+      MARQUEZ_CONFIG: /usr/src/app/marquez.yml
+    volumes:
+      - ./infra/marquez/marquez.yml:/usr/src/app/marquez.yml:ro
+
+  marquez-web:
+    image: marquezproject/marquez-web:0.51.1
+    depends_on:
+      - marquez
+    ports:
+      - "3000:3000"
+    environment:
+      MARQUEZ_HOST: marquez
+      MARQUEZ_PORT: "5000"
+
+  airflow:
+    image: apache/airflow:2.10.5-python3.12
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+      AIRFLOW__CORE__FERNET_KEY: MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/fuel/airflow/dags
+      AIRFLOW__WEBSERVER__SECRET_KEY: fuel-shock-local-demo
+      PYTHONPATH: /opt/fuel/src
+      _PIP_ADDITIONAL_REQUIREMENTS: "duckdb==2.0.0 pandas==3.1.0 great_expectations==1.24.1"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/opt/fuel
+    command: >
+      bash -c "airflow db migrate &&
+      airflow users create --username airflow --password airflow --firstname Fuel --lastname Shock --role Admin --email airflow@example.com || true &&
+      airflow webserver &
+      airflow scheduler"
+
+  spark:
+    build:
+      context: .
+      dockerfile: spark/Dockerfile
+    depends_on:
+      redpanda:
+        condition: service_started
+    environment:
+      KAFKA_BOOTSTRAP: redpanda:9092
+      DELTA_ROOT: /data/delta
+    volumes:
+      - spark-data:/data
+
+volumes:
+  postgres-data:
+  spark-data:

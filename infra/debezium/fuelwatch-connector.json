@@ -1,0 +1,25 @@
+{
+  "name": "fuelwatch-postgres",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "fuelwatch",
+    "database.password": "fuelwatch",
+    "database.dbname": "fuelwatch",
+    "topic.prefix": "fuelwatch",
+    "plugin.name": "pgoutput",
+    "publication.name": "fuelwatch_pub",
+    "slot.name": "fuelwatch_slot",
+    "table.include.list": "public.station,public.retail_price,public.terminal_gate_price",
+    "tombstones.on.delete": "false",
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.add.fields": "op,table",
+    "transforms.unwrap.delete.handling.mode": "drop",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false"
+  }
+}

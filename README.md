@@ -1,143 +1,193 @@
 # Fuel Shock Radar
 
-### A monthly retail-price warehouse with Python, DuckDB, and Parquet
+Live dashboard: [https://luciferdataengineer.github.io/fuel-shock-radar/](https://luciferdataengineer.github.io/fuel-shock-radar/)
 
-[![Fuel warehouse checks](https://github.com/LuciferDataEngineer/fuel-shock-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/LuciferDataEngineer/fuel-shock-radar/actions/workflows/ci.yml)
-![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
-![DuckDB](https://img.shields.io/badge/DuckDB-2.0.0-FFF000?logo=duckdb&logoColor=black)
-![Parquet](https://img.shields.io/badge/Storage-Parquet-254B62)
+Transport costs in Australia rose **8.7%** in the year to September 2026, and automotive fuel rose **23.6%**. Those figures are the Australian Bureau of Statistics consumer price index. This project asks what that shock looks like in Western Australia, using FuelWatch pump prices, FuelWatch terminal gate (wholesale) prices, and Brent crude.
 
-**Turn Western Australian fuel-price archives into a reproducible analytical data product.** Validate complete monthly snapshots, load a transactional DuckDB warehouse, calculate daily price distributions and matched-outlet changes in SQL, and export Parquet for further analysis.
+The dashboard is for drivers and policy readers. It answers three questions and stops there.
 
-This AI-assisted portfolio project demonstrates **ELT, analytical database design, data quality, temporal joins, and reproducible analysis**. It studies historical retail observations. It does not ingest wholesale or crude prices, establish causes of price changes, or provide live fuel availability.
+1. **When should a Perth driver fill, and what is that worth?**
+2. **How far is the pump price above wholesale, and do rises reach the pump faster than falls?**
+3. **How much more does unleaded cost outside Perth?**
 
-## Why this topic
+## Findings
 
-In September 2026, the WA government announced FuelWatch improvements focused on price transparency and discrepancy reporting. Trustworthy price data and clear comparison methods are a timely engineering problem. [WA Government announcement](https://www.wa.gov.au/government/announcements/fuelwatch-upgrades-and-emergency-fuel-powers-extended-support-wa-fuel-security)
+Prices below are unleaded (ULP). Each station is counted equally. The extract runs from 1 October 2025 to 29 October 2026, plus the FuelWatch today/tomorrow board captured on 30 October 2026.
 
-A market average can move because different outlets appear in the data. This pipeline distinguishes that composition effect from a price change at the same reported outlet. It also handles corrected source files without duplicating facts or erasing unrelated months.
+**Tuesday is the cheap day in Perth.** Over the 16 weeks to 29 October 2026 the average Perth price was **$2.04** on Tuesday and **$2.18** on Wednesday. That is a **13.5 cent** swing. On a 55 litre tank, filling on Tuesday instead of Wednesday saves **$7.44**. The swing is wide enough that timing the fill is worth planning. The price locked in for Saturday 31 October was **$2.28** in Perth.
 
-## Questions the warehouse supports
+**The pump price is tracking wholesale, not a fatter retail gap.** Over the last 7 days the Perth pump price sat **8.8 cents** above the Perth terminal gate price. The median gap across the year of daily prices was **7.6 cents**, so the current gap is in the usual range. Week by week, about **89%** of a wholesale rise and **91%** of a wholesale fall showed up in the pump price (27 rising weeks, 23 falling weeks). Rises and falls are reaching the pump at a similar rate. The level of prices is the shock: Perth unleaded in October 2026 was **37%** higher than October 2025, and Brent was **$123** a barrel on 27 October 2026, **88%** above a year earlier.
 
-1. How do daily median prices and price distributions vary by fuel product and locality?
-2. How much did a price change at the **same reported outlet** on consecutive calendar days?
-3. Which observed changes cross an illustrative 10 cents-per-litre threshold?
-4. Which source bytes, load, and monthly replacement produced a result?
+**Country towns pay more, and the Kimberley pays a lot more.** Over the 28 days to 29 October the average unleaded price outside Perth was **22 cents** higher than Perth ($2.56 against $2.34). Peel, which FuelWatch classifies as country, was closest to the city at $2.39. The Kimberley averaged **$3.03**.
 
-“Shock” is the project name. A threshold flag identifies a numerical change, not an economic shock, causal finding, wrongdoing, or recommendation to buy fuel.
+| Decision | Figure | Status |
+| --- | --- | --- |
+| Cheapest day in Perth | Tuesday | High (the weekly swing is wide) |
+| Saving from timing a 55 L fill | $7.44 | Elevated |
+| Pump price above the Perth terminal price | 8.8c | Calm |
+| Country premium versus Perth | 22c | Elevated |
+
+Status cut-offs, and why the weekly pass-through throws away the Wednesday spike, are under [How the figures are calculated](#how-the-figures-are-calculated).
 
 ## Architecture
 
+Historic files and the daily feed land in a curated extract. The same extract feeds the batch path (what CI runs) and can be loaded into Postgres, where Debezium publishes changes onto Redpanda for the Spark job.
+
 ```mermaid
 flowchart LR
-    A[Monthly CSV archive] --> B[Raw snapshot and SHA-256]
-    B --> C[Validate schema, dates, keys and prices]
-    C --> D[Atomic monthly replacement in DuckDB]
-    D --> F[Outlet / product / day facts]
-    F --> G[Daily distributions]
-    F --> H[Exact previous-day comparisons]
-    G --> I[Parquet and JSON outputs]
-    H --> I
-    D --> J[Load audit and source lineage]
+  subgraph sources [Sources]
+    FW[FuelWatch historic CSV and daily feed]
+    FRED[FRED Brent DCOILBRENTEU]
+  end
+
+  FW --> PG[(Postgres OLTP)]
+  PG --> DBZ[Debezium]
+  DBZ --> RP[Redpanda]
+  RP --> SP[PySpark Structured Streaming]
+  SP --> DL[(Delta Lake MERGE and station SCD2)]
+
+  FW --> AF[Airflow Datasets]
+  FRED --> AF
+  AF --> BAT[Batch build]
+  DL --> BAT
+  BAT --> GX[Great Expectations and Data Docs]
+  BAT --> OL[OpenLineage events]
+  OL --> MQ[Marquez]
+  BAT --> DK[(DuckDB serving marts)]
+  DK --> SITE[Static dashboard]
+  SITE --> PAGES[GitHub Pages]
 ```
 
-The pipeline ingests **completed calendar months only**. Current-month data is a moving partial snapshot and is rejected by this version. Every date in a source month must be represented, although that does not prove every outlet reported on every date.
+The batch path does not start the streaming stack. It reads the curated parquet, checks it, rebuilds station history, writes DuckDB marts, and publishes `site/data/dashboard.json`.
 
-## Implemented stack
+## Tech stack
 
-| Layer | Technology | Why it is used |
-|---|---|---|
-| Acquisition | Python HTTP and CSV tools | Bounded batch downloads and explicit validation |
-| Analytical database | DuckDB 2.0.0 | Transactions, decimal prices, analytical SQL, and Parquet support |
-| Storage | DuckDB and Parquet | Local reproducibility and portable columnar extracts |
-| Transformation | SQL joins, aggregates, and date logic | Inspectable grain and exact previous-day comparisons |
-| Provenance | Raw files, SHA-256, load audit | Trace results and replay corrected snapshots |
-| Verification | Python unittest | Offline tests of data contracts and analytical semantics |
-| CI | GitHub Actions | Python 3.11 and 3.14 checks on every push |
+| Piece | Role |
+| --- | --- |
+| Postgres 16 | OLTP source for station and price changes, with logical replication |
+| Debezium 2.7 | Change data capture from Postgres into Redpanda |
+| Redpanda 24.3 | Kafka API log for the price and station topics |
+| PySpark 3.5 Structured Streaming and Delta Lake 3.2 | `foreachBatch` MERGE into the price table, and SCD2 MERGE for station attributes |
+| Airflow 2.10 Datasets | `fuel_shock_ingest` publishes a dataset; `fuel_shock_publish` is scheduled on it |
+| OpenLineage and Marquez 0.51 | Run events for ingest, metrics, expectations, and the dashboard |
+| Great Expectations 1.24 | Expectation suites and Data Docs |
+| DuckDB 2 | Serving marts and the dashboard extract |
+| GitHub Actions and GitHub Pages | Unit tests, the offline batch build, and the static site |
 
-No paid cloud account is required. Distributed streaming, CDC, Airflow, Spark, Delta Lake, and lineage servers are proposed extensions rather than implemented features.
+## Data sources and licences
 
-## Source data and attribution
+| Source | What it is | Licence |
+| --- | --- | --- |
+| [FuelWatch historic fuel prices](https://catalogue.data.wa.gov.au/dataset/fuelwatch-historic-fuel-prices) | Daily retail prices. Files are listed at `https://www.fuelwatch.wa.gov.au/api/report/monthly-retail-prices` and downloaded from the FuelWatch historical-reports store. | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Custodian: FuelWatch, Department of Energy, Mines, Industry Regulation and Safety, Government of Western Australia. |
+| [FuelWatch historic terminal gate prices](https://catalogue.data.wa.gov.au/dataset/fuelwatch-historic-terminal-gate-prices) | Daily wholesale prices. Catalogue at `https://www.fuelwatch.wa.gov.au/api/report/terminal-gate-prices`. | CC BY 4.0. Same custodian. |
+| [FuelWatch daily feed](https://www.fuelwatch.wa.gov.au/api/sites?fuelType=ULP) | Today's and tomorrow's unleaded board, including the price locked in for the next day. | Published by FuelWatch for public use. Attribute FuelWatch as above. |
+| [FRED DCOILBRENTEU](https://fred.stlouisfed.org/series/DCOILBRENTEU) | Europe Brent spot price, US dollars per barrel. The series is produced by the U.S. Energy Information Administration and republished by the Federal Reserve Bank of St. Louis. | FRED data is free to use with attribution. Cite FRED and the EIA. |
+| [ABS CPI, September 2026](https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/latest-release) | National context only: transport +8.7%, automotive fuel +23.6%, headline CPI +4.3%. These numbers are cited, not recomputed. | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Australian Bureau of Statistics. |
 
-The WA open-data catalog lists **FuelWatch Historic Fuel Prices** under **Creative Commons Attribution 4.0**. It describes daily retail observations, with the current monthly file updated using the preceding day's data. Source dates are WA calendar dates. [Dataset catalog](https://catalogue.data.wa.gov.au/dataset/fuelwatch-historic-fuel-prices)
+FuelWatch prices in the source files are cents per litre. The dashboard shows dollars per litre for price levels and cents for gaps.
 
-Live validation uses **September 2026**, retrieved on **30 October 2026**: 101,303 rows across 30 days. The download is historical, not a current price quote. The archive endpoint was located in a public client; the catalog-to-storage link could not be independently resolved from FuelWatch's JavaScript page in this environment. See [SOURCES.md](docs/SOURCES.md) for the exact endpoint, discovery chain, checksums, licensing evidence, and access limits. Raw live data is excluded from Git.
+## How to run
 
-### Identity and units
-
-The archive has no stable outlet identifier. A derived ID uses normalized trading name, address, locality, and postcode. Trading name is necessary because distinct reported offers can share an address. A rename creates a new identity; comparisons do not bridge it silently.
-
-Counts describe **reported outlet identities**, not verified physical station counts. Purchase restrictions may be embedded in trading names; the data does not establish a person's eligibility for every offer. Prices are **cents per litre**, stored with one decimal place. Averages and medians are not weighted by sales volume.
-
-## Reproduce the project
-
-Requires Python 3.11 or newer:
+Python 3.11 or newer. The checked-in extract is enough for the dashboard, the tests, and the benchmark. Docker is only for the streaming stack.
 
 ```bash
-git clone https://github.com/LuciferDataEngineer/fuel-shock-radar.git
-cd fuel-shock-radar
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install .
-python -m unittest discover -s tests -v
+make setup
+make test
+make batch
+make benchmark
+make site          # http://localhost:8080
 ```
 
-On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1`. The [operations guide](docs/OPERATIONS.md) contains exact offline/live commands, replay steps, and failure recovery. Synthetic fixtures are fictional, reproducible, and require no network connection. [Examples](examples/) contain selected aggregate execution evidence.
+`make data` refreshes the curated extract from FuelWatch and FRED. `make batch` rebuilds the dashboard from `data/curated` without downloading.
 
-Run the offline demonstration or download the completed September archive:
+### Full streaming stack
 
 ```bash
-python -m fuel_radar ingest --data-dir demo-data --as-of 2026-10-30 \
-  --file tests/fixtures/august_2026.csv --file tests/fixtures/september_2026.csv
-python -m fuel_radar fetch --month 2026-09 --as-of 2026-10-30 --data-dir data
+make up
+bash infra/debezium/register-connector.sh
+bash scripts/load_oltp.sh
 ```
 
-The warehouse is `data/warehouse.duckdb`. Read `data/exports/latest.json` to locate a complete generation of Parquet outputs and its summary.
+| Service | URL |
+| --- | --- |
+| Airflow | http://localhost:8080 (airflow / airflow) |
+| Debezium Connect | http://localhost:8083 |
+| Marquez | http://localhost:3000 |
+| Redpanda | localhost:19092 |
+| Postgres | localhost:5432 (fuelwatch / fuelwatch) |
 
-## Engineering contracts
+Container passwords are for this local demo only. Postgres starts with `wal_level=logical` and a publication, `fuelwatch_pub`, on `station`, `retail_price`, and `terminal_gate_price`. Debezium unwraps the row (`ExtractNewRecordState`) onto topics `fuelwatch.public.retail_price` and `fuelwatch.public.station`. The Spark job merges price changes into a Delta table and applies SCD2 to station attributes: a change of brand, address, area, or region closes the open version and inserts a new one.
 
-- One fact per reported outlet, product, and calendar date.
-- A changed monthly source replaces only that month; other periods remain intact.
-- Identical replay does not duplicate logical price facts.
-- Invalid input cannot partially replace trusted facts.
-- Day-on-day changes require the same outlet and product on the immediately preceding date. A gap is not a one-day change.
-- Coverage and eligible comparison counts accompany summaries.
-- Source checksums and execution history remain inspectable when inputs are corrected.
+`make down` stops the stack.
 
-See [DATA_MODEL.md](docs/DATA_MODEL.md) for tables and metrics, and [analysis.sql](sql/analysis.sql) for analytical queries.
+### CI and GitHub Pages
 
-## Validation and operating limits
+`.github/workflows/ci.yml` installs `requirements.txt`, runs the unit tests, runs `python -m fuel_shock.batch --offline`, checks that `site/data/dashboard.json` matches that build, and smoke-tests the benchmark. It does not start Docker.
 
-[VALIDATION.md](VALIDATION.md) records actual tests, live ingestion, replay, SQL execution, and Parquet reconciliation. The README badge reports remote CI separately from local checks.
+`.github/workflows/pages.yml` deploys the `site/` directory on every push to `main` with `actions/upload-pages-artifact` and `actions/deploy-pages`.
 
-| Verified on 30 October 2026 | Result |
-|---|---:|
-| Offline tests | 18 passed |
-| September observations loaded | 101,303 |
-| Fuel product labels | 7 |
-| Parquet datasets reconciled against the warehouse | 4 of 4 |
-| Business-state differences on identical replay | 0 |
+## How the figures are calculated
 
-Date coverage cannot prove every source record was supplied. Outlet identity, reporting coverage, and purchase eligibility affect interpretation. This implementation requires one writer and is not a hosted live dashboard.
+- **Perth week.** Daily mean of Perth unleaded, then the mean of those days by weekday, for the last 16 weeks (10 July 2026 to 29 October 2026). Across that window Tuesday was cheapest and Wednesday was dearest.
+- **Tank saving.** `(dearest − cheapest) / 100 × 55` litres.
+- **Wholesale gap.** Perth daily mean unleaded minus the mean unleaded terminal gate price at terminals whose location contains Kwinana or Kewdale. The card uses the last 7 days. The comparison line is the median daily gap over the whole extract.
+- **Rises and falls.** Week-average pump and terminal prices, so the Wednesday retail spike is not treated as a wholesale response. A week counts when the terminal price moves by at least 0.5 cents. The reported share is the median of `pump change / terminal change`. The result is called symmetric when the rise share and the fall share differ by less than 10 percentage points.
+- **Country premium.** Mean unleaded over the last 28 days for every station-day outside FuelWatch's Metro region, minus the Metro mean. Peel is country in FuelWatch's own region list, and it is shown separately on the chart.
+- **Brent.** Latest observation against the observation on or before the same date a year earlier.
+- **Station history.** Business key is trading name, suburb, and postcode. The batch rebuild in DuckDB and the Spark MERGE use the same rule. In this extract that is **1,044** stations, **1,109** versions, and **65** closed versions.
 
-## Explain it in an interview
+Status colours use fixed cut-offs:
 
-- Why a median over changing samples differs from a matched-outlet change.
-- Why LAG alone can accidentally compare across a missing date.
-- How transactions and scoped replacement handle corrected or removed source rows.
-- Why decimals, units, and declared grain prevent subtle errors.
-- Why a derived outlet identity differs from a stable publisher key.
-- When DuckDB and Parquet fit, and when concurrent usage needs another database.
+| Figure | Calm | Elevated | High |
+| --- | --- | --- | --- |
+| Weekly swing | under 6c | 6c to under 12c | 12c or more |
+| Tank saving | under $4 | $4 to under $8 | $8 or more |
+| Gap over wholesale | under 1.5c above the past-year median | 1.5c to under 4c above it | 4c or more above it |
+| Country premium | under 12c | 12c to under 25c | 25c or more |
+
+## Data quality
+
+Great Expectations 1.24 runs three suites during the batch build and writes Data Docs.
+
+| Suite | Checks |
+| --- | --- |
+| Retail prices | Date, station, and price present. Price between 70c and 500c. Product is ULP, Diesel, or Brand Diesel. Region is one of the ten FuelWatch regions. Station, date, and product are unique together. |
+| Terminal gate prices | Date and terminal present. Price between 40c and 400c. Product is in the same set. |
+| Brent | Date present. Price between $5 and $250 a barrel. |
+
+Data Docs are written to `quality/data_docs/index.html` (gitignored; regenerated by `make batch`). The build stops if a suite fails.
+
+## Lineage
+
+Each batch build writes OpenLineage run events under `lineage/events/`:
+
+- `ingest.retail`, `ingest.wholesale`, `ingest.brent`, `ingest.daily_feed`
+- `transform.metrics`
+- `quality.expectations`
+- `serve.dashboard`
+
+If `MARQUEZ_URL` or `OPENLINEAGE_URL` is set (for example `http://localhost:5000`), the same events are posted to `/api/v1/lineage`. With `make up`, Marquez is at http://localhost:3000. The JSON files remain the copy that works when Marquez is down.
+
+Airflow connects the same steps with Datasets. `fuel_shock_ingest` runs daily and publishes `file://fuel-shock-radar/data/curated`. `fuel_shock_publish` is scheduled on that dataset and rebuilds the dashboard.
+
+## Benchmark
+
+Serving question: once the extract exists, how should the dashboard aggregations run? Measured on the curated retail extract (**722,413** rows), median of 7 runs after one warmup. DuckDB times include reading the parquet file. Pandas times are the aggregation only, after DuckDB had already loaded the frame. The load itself took **98 ms**.
+
+| Query | DuckDB, from parquet | Pandas, in memory |
+| --- | --- | --- |
+| Average Perth price by weekday | 3.5 ms | 7.8 ms |
+| Daily Perth average | 3.3 ms | 1.5 ms |
+
+DuckDB is the serving engine because the useful comparison is the whole step: read the extract and aggregate. That finishes in a few milliseconds. Pandas is quicker on one in-memory daily group-by, and slower on the weekday group-by, and it still needs the load. The Spark and Redpanda path is for change capture, not for these dashboard scans, so it is not in this table. Figures are from `benchmarks/latest.json`, regenerated with `make benchmark`.
 
 ## Repository map
 
-```text
-src/fuel_radar/       Acquisition, validation, warehouse and CLI
-tests/               Synthetic fixtures and acceptance tests
-sql/analysis.sql     Analytical queries
-docs/                Sources, data model and operations
-examples/            Dated aggregate execution evidence
-.github/workflows/   CI checks
 ```
-
-Original code is [MIT licensed](LICENSE). Data attribution: **Government of Western Australia, FuelWatch Historic Fuel Prices, CC BY 4.0**. Derived identifiers and transformations are this project's work. No government endorsement is implied.
+src/fuel_shock/     ingest, metrics, SCD2, quality, lineage, batch, Spark job
+airflow/dags/       Dataset-scheduled DAGs
+infra/              Postgres init, Debezium connector, Marquez config
+site/               dashboard
+data/curated/       committed extract
+tests/              unit tests and a fixture batch
+```
